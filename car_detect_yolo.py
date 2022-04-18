@@ -63,7 +63,7 @@ def yolo_filter_boxes(boxes, box_confidence, box_class_probs, threshold = .6):
     # get rid of all bounding boxes whose score is blow the threshold, those that don't actually contain a class
     # Use TensorFlow to apply the mask to box_class_scores, boxes and box_classes to filter out the boxes you don't want.
 
-    scores = tf.boolean_mask(box_class_scores, filtering_mask, box_class_scores)  #(19, 19, 1)
+    scores = tf.boolean_mask(box_class_scores, filtering_mask)  #(19, 19, 1)
     boxes = tf.boolean_mask(boxes, filtering_mask)   # (19, 19, 5, 4) ??? or (19, 19, 4) dimensions don;t match
     classes = tf.boolean_mask(box_classes, filtering_mask)  #(19, 19, 1)
     ### END CODE HERE
@@ -87,16 +87,15 @@ def iou(box1, box2):
     ### START CODE HERE
     # Calculate the (yi1, xi1, yi2, xi2) coordinates of the intersection of box1 and box2. Calculate its Area.
     ##(≈ 7 lines)
-    xi1 = np.max(box1_x1, box2_x1)
-    yi1 = np.max(box1_y1, box2_y1)
-    xi2 = np.min(box1_x2, box2_x2)
-    yi2 = np.min(box1_y2, box2_y2)
+    xi1 = max(box1_x1, box2_x1)
+    yi1 = max(box1_y1, box2_y1)
+    xi2 = min(box1_x2, box2_x2)
+    yi2 = min(box1_y2, box2_y2)
     inter_width = xi2 - xi1
     inter_height = yi2 - yi1
-    if inter_width <= 0 or inter_height <= 0:
-        inter_area = 0
-    else:
-        inter_area = inter_width * inter_height
+
+    # calculate the intersection area conditioning that if the width or height of the intersection box <= 0, area = 0
+    inter_area = max(inter_width, 0) * max(inter_height, 0)
     
     # Calculate the Union area by using Formula: Union(A,B) = A + B - Inter(A,B)
     ## (≈ 3 lines)
