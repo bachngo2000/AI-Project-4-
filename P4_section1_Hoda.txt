@@ -1,0 +1,24 @@
+Project 4 supplemental
+Our Team members: Hoda Soltani, Bach X Nguyen Ngo
+
+Section 1: Please describe in 2-3 sentences your methodology for choosing the number of hidden layers, batch size, learning rates, and number of nodes. Please mention any reduction schemas utilized or any noteworthy trial and error experiments.
+
+Answer: 
+Note: It seems like the weight and bias matrices/tensors are initiated randomly by nn.Parameter() function. As a result, running the NN model with the same parameters over and over returned slightly different accuracies with some greater than 0.98 in one run and less that 0.98 in another?!
+
+The "number of hidden unites" governs the expressive power of the net and consecuently the complexity of the decision boundary. From our trials, we noticed that for a net with only one hidden layer, nets with more than about 200 units resulted in 97.8% accuracy where the batch size set to 1000, 2000, and 3000 examples with learning rate = -1. This observation suggests that the classes are not linearly separable and that is why a large number of hidden units were required. By increasing the number of units we can reduce the error and tune the model to a particular training set while loosing its prediction accuracy for the test dataset due to overfitting.
+
+We also tried a model with 2 hidden layers both with 300 units, learning rate of -1 and achieved slightly lower accuracy around 97.6%. We observed that for higher or smaller unit numbers such as 100 and 400 the net wouldn't converge within 6 mins. We tried different batch-sizes including 1000, 1500, and 2000. However, the effect of the batch size was not significant. 
+
+On the effect of the learning rate, theoretically as long as the learning rate is small enough to ensure convergence of the model, its value determines the speed at which the net finds a minimum in the cost function. It will not change the weights. Smaller values, slower training. However, in practice as also happened in this project, nets are rarely trained fully to a min training error and that is why the learning rate can affect the quality of the trained model. From our experiments we observed drastic change in the run time for higher values of learning rate. We capped our rate at -1. Theoretically, if we had the optimal learning rate we could have found the min of cost function/error in one step of training. We found in the literature that for learning rate > 2*optimal net will not converge. We also observed cases in our experiments when the accuracy started growing but after a while it started reducing and diverging from the desirable value, but it was not clear if it was merely controlled by the learning rate.
+
+Increasing the batch sizes also improved the speed of training. We increased the batch size gradually with step of 500 and at 5000 the model would not converge within 6 mins. We selected 2000 or 3000 as the best.
+
+The best result obtained from our model with only one hidden layer:
+self.learn_rate = -1
+self.num_hid_units = 500
+self.batch_size = 2000
+Your final test set accuracy is: 97.960000%
+
+
+
